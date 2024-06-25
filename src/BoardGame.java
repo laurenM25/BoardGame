@@ -36,7 +36,7 @@ public class BoardGame {
     class Player {
         char player;
         int points = 0;
-        int position = 0; // start block //????
+        int position = 0; // start block initial position
         int movesMade = 0;
     }
 
@@ -239,27 +239,18 @@ public class BoardGame {
         Player curPlayer = getPlayer(player);
         int currentSpace = getPlayerPosition(player); // find player's position
 
-        // move number DELETE PRINT MESSAGE
-        // System.out.println("MOVE " + curPlayer.movesMade);
-
         // roll die, examine space
         int move = rollDice();
-        // System.out.println("roll: " + move); //DELETE PRINT MESSAGE
 
         int bsIndex = move + currentSpace;
 
         // check if valid move/space
         if (bsIndex <= board.size()) { // a valid space
             BoardSpace bs = board.moveNode(bsIndex);
-            // System.out.println("Move to position " + bsIndex); //DELETE PRINT MESSAGE
 
             // CHECK IF OCCUPIED
             if (bs.occupied) {
                 char previousPlayer = bs.getPreviousPlayer(); // get previous player occupying space
-
-                // System.out.println( //DELETE PRINT MESSAGE
-                // "Player " + previousPlayer + " previously occupied the space. They get booted
-                // to start!");
                 bootPlayerToStart(previousPlayer);
             }
 
@@ -279,12 +270,8 @@ public class BoardGame {
                 // update board space (player new spot)
                 bs.playerTakesSpace(player);
 
-                // update player's points + info DELETE PRINT MESSAGES
-                // System.out.println("Player " + player + " gets " + bs.value + " points.");
+                // update player's points/position
                 curPlayer.points += bs.value;
-
-                // System.out.println("Player " + player + " now has " + curPlayer.points + "
-                // points.");
                 curPlayer.position = bsIndex;
             }
             // make previous board space unoccupied
@@ -293,15 +280,10 @@ public class BoardGame {
                 previousBS.playerLeavesSpace();
             }
 
-        } else { // DELETE PRINT MESSAGES
-            // System.out.println("Overshot it! Player " + player + " loses a turn.");
-            // System.out.println("current position: " + currentSpace + " | Points: " +
-            // curPlayer.points);
         }
         curPlayer.movesMade++;
         turn++; // next turn!
 
-        // System.out.println(); DELETE PRINT MESSAGE
     }
 
     public static void runOneGame(BoardGame game, int numPlayers, int gameNum) {
@@ -309,9 +291,7 @@ public class BoardGame {
 
         game.setPlayers(numPlayers);
 
-        do { // DELETE PRINT MESSAGE
-             // System.out.println("Player " + game.getWhoseTurn() + "'s
-             // turn:\n=====================================");
+        do {
             game.makeMove();
         } while (!game.isGameOver());
 
@@ -356,7 +336,7 @@ public class BoardGame {
                     break;
             }
 
-            if (i % 100 == 1) {
+            if (i % 100 == 1 || i == 1000) {
                 System.out.println("Game " + i);
                 game.printBoard();
                 System.out.println();
